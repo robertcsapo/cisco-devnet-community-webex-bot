@@ -1,0 +1,67 @@
+{
+	"contentType": "application/vnd.microsoft.card.adaptive",
+	"content": {
+		"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+		"type": "AdaptiveCard",
+		"version": "1.0",
+    "body": [{
+  			"type": "ColumnSet",
+  			"columns": [{
+  					"type": "Column",
+  					"width": "auto",
+  					"items": [{
+  						"type": "Image",
+  						"url": "https://card.avatar.image.tld",
+  						"size": "Small",
+  						"style": "Person",
+              "height": "36px",
+              "width": "36px"
+  					}]
+  				},
+  				{
+  					"type": "Column",
+  					"width": "stretch",
+  					"items": [{
+  							"type": "TextBlock",
+  							"text": "TITLE",
+  							"weight": "Bolder",
+  							"wrap": true
+  						},
+  						{
+  							"type": "TextBlock",
+  							"spacing": "None",
+  							"text": "DATE CREATED",
+  							"isSubtle": true,
+  							"wrap": true
+  						}
+  					]
+  				}
+  			]
+  		},
+  		{
+  			"type": "TextBlock",
+  			"text": "DESCRIPTION",
+  			"wrap": true
+  		},
+  		{
+  			"type": "FactSet",
+  			"facts": [{
+  					"title": "LABEL",
+  					"value": "VALUE"
+  				}
+  			]
+  		},
+  		{
+  			"type": "ActionSet",
+  			"actions": [{
+  				"type": "Action.OpenUrl",
+  				"title": "View Link",
+  				"iconUrl": "",
+          "url": "https://www.cisco.se",
+  				"style": "positive"
+  			}],
+        "horizontalAlignment": "center"
+  		}
+  	]
+	}
+}

@@ -1,0 +1,32 @@
+# Enable modules to fetch data and create Webex Adaptive Cards
+# Comment module if you want to disable a module
+modules:
+    # URL to Cisco DevNet blog
+    blog:
+      - https://blogs.cisco.com/developer
+    # Github.com org name
+    github:
+        orgs:
+          - ciscodevnet
+    # BrightTALK
+    brighttalk:
+      - 17628
+    # Meetup group name
+    meetup:
+      - cisco-developers-club-stockholm
+
+# Environment Secrets
+# Use docker-compose or Vault for production!
+# Don't store settings in git
+
+# AWS DynamoDB Settings
+dynamodb:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  AWS_DEFAULT_REGION:
+  # If running DynamoDB Local (Optional)
+  #endpoint_url: http://local:8000
+# Cisco Webex Settings
+webex:
+  WEBEX_TEAMS_ACCESS_TOKEN:
+  WEBEX_TEAMS_ROOM_ID:
