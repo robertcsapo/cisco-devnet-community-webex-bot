@@ -84,6 +84,18 @@ Then clone this repo and edit ```config.yaml```
 
 You can create the DynamoDB Table with ```--init``` flag
 
+* Database structure
+```
+{
+    "AttributeName": "type",
+    "KeyType": "HASH"
+},
+{
+    "AttributeName": "link",
+    "KeyType": "RANGE"
+}
+```
+
 ### docker
 
 ###### Start service
