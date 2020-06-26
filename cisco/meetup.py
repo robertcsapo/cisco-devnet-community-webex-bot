@@ -8,7 +8,14 @@ def get(group):
     headers = {
                 "Content-Type": "application/json"
               }
-    response = requests.request("GET", url, headers=headers)
+    try:
+        response = requests.request("GET", url, headers=headers)
+    except Exception as error:
+        meetup["url"] = False
+        meetup["error"] = "{} {}".format(
+            "Unavailable", error
+            )
+        return meetup
     ''' If API isn't responding continue to next module '''
     if response.status_code != 200:
         meetup["url"] = False
@@ -27,7 +34,16 @@ def get(group):
 
     meetup["title"] = item[0]["name"]
     meetup["url"] = item[0]["link"]
-    meetup["venue"] = item[0]["venue"]["address_1"]+", "+item[0]["venue"]["city"]
+    if item[0]["is_online_event"] is True:
+        meetup["venue"] = "Online event"
+    else:
+        try:
+            meetup["venue"] = item[0]["venue"]["address_1"]+", "+item[0]["venue"]["city"]
+        except Exception:
+            try:
+                meetup["venue"] = item[0]["venue"]["name"]
+            except Exception:
+                meetup["venue"] = "Unknown"
     meetup["avatar"] = meetupAvatar(group)
     if len(item[0]["description"]) > 200:
         soup = BeautifulSoup(item[0]["description"][0:200], 'html.parser')

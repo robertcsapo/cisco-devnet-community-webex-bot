@@ -10,7 +10,14 @@ def get(id):
     headers = {
                 "Content-Type": "application/xml"
               }
-    response = requests.request("GET", url, headers=headers)
+    try:
+        response = requests.request("GET", url, headers=headers)
+    except Exception as error:
+        result["url"] = False
+        result["error"] = "{} {}".format(
+            "Unavailable", error
+            )
+        return result
 
     ''' If API isn't responding continue to next module '''
     if response.status_code != 200:
@@ -36,7 +43,10 @@ def get(id):
         result["categories"] = "Not available"
     result["avatar"] = "https://www.brighttalk.com/communication/396682/thumbnail1587132190409.png"
     if len(item["feed"]["entry"]["summary"]) > 200:
-        soup = BeautifulSoup(item["feed"]["entry"]["summary"][0:200], 'html.parser')
+        soup = BeautifulSoup(
+            item["feed"]["entry"]["summary"][0:200],
+            'html.parser'
+            )
         result["desc"] = soup.getText()+"..."
     else:
         soup = BeautifulSoup(item["feed"]["entry"]["summary"], 'html.parser')
@@ -45,12 +55,3 @@ def get(id):
     dateObj = datetime.fromtimestamp(result["date"])
     result["date"] = dateObj.strftime("%Y-%m-%d %H:%M")
     return result
-
-''' TODO REMOVE '''
-if __name__ == "__main__":
-    import sys
-    id = "17628"
-    test = get(id)
-    import json
-    test = json.dumps(test, indent=4)
-    print(test)

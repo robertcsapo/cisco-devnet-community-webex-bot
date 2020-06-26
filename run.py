@@ -1,19 +1,6 @@
-import time
-import yaml
-import os
-import argparse
-import logging
-''' Custom modules '''
-from aws import dynamodb
-from cisco import blog
-from cisco import github
-from cisco import brighttalk
-from cisco import meetup
-from cisco import webex
+"""Cisco DevNet community Webex bot Console Script.
 
-"""Cisco DevNet community Webex bot
-
-Copyright (c) 2020 Cisco and/or its affiliates.
+Copyright (c) 2018 Cisco and/or its affiliates.
 
 This software is licensed to you under the terms of the Cisco Sample
 Code License, Version 1.1 (the "License"). You may obtain a copy of the
@@ -32,10 +19,22 @@ or implied.
 
 __author__ = "Robert Csapo"
 __email__ = "rcsapo@cisco.com"
-__version__ = "0.1"
-__copyright__ = "Copyright (c) 2020 Cisco and/or its affiliates."
+__version__ = "0.2"
+__copyright__ = "Copyright (c) 2018 Cisco and/or its affiliates."
 __license__ = "Cisco Sample Code License, Version 1.1"
 __app__ = "cisco-devnet-community-webex-bot"
+
+import time
+import yaml
+import os
+import argparse
+import logging
+from aws import dynamodb
+from cisco import blog
+from cisco import github
+from cisco import brighttalk
+from cisco import meetup
+from cisco import webex
 
 
 def collector(type, args, config):
@@ -50,54 +49,80 @@ def collector(type, args, config):
     elif type == "meetup":
         items = meetup.get(config["modules"]["meetup"][0])
     if args.debug is True:
-        logging.info("DEBUG: {} module - {}".format(type, items))
+        logging.info("DEBUG: {} module - {}".format(
+            type,
+            items
+            )
+        )
 
     if args.debug is True:
-        logging.info("DEBUG: {} module - {}".format(type, items))
+        logging.info("DEBUG: {} module - {}".format(
+            type,
+            items
+            )
+        )
 
     ''' If it wasn't possible to get new data from modules API '''
     ''' Then continue to next module '''
     if items["url"] is False:
-        logging.error("Problem with {} API - {}".format(type, items["error"]))
+        logging.error("Problem with {} API - {}".format(
+            type,
+            items["error"]
+            )
+        )
         return
 
     ''' Check if link/url exist in db for that type '''
     latest = dynamodb.latest(args.table, type, items["url"], args)
     if args.debug is True:
-        logging.info("DEBUG: dynamodb - {}".format(items))
+        logging.info("DEBUG: dynamodb - {}".format(
+            items
+            )
+        )
 
     ''' Match unique links of the type '''
     if (
         (latest["link"] is False or latest["link"] != items["url"])
-            and args.dry is False
+        and args.dry is False
             ):
         ''' Post to Webex Teams if new unique link '''
         dynamodb.add(args.table, type, items["title"], items["url"], args)
         status = webex.card(type, items, args)
         logging.info("Status: {} - {} - {}".format(
-                status["state"], type, items["url"]
-                )
+            status["state"],
+            type,
+            items["url"]
             )
+        )
         return
     else:
         if args.force is True:
             ''' Force updates to Webex Teams '''
             status = webex.card(type, items, args)
             logging.info("Status: {} - {} - {}".format(
-                    status["state"], type, items["url"]
-                    )
+                status["state"],
+                type,
+                items["url"]
                 )
+            )
         elif args.dry is True:
             ''' Don't post anything to Webex Teams '''
             status = webex.card(type, items, args)
-            logging.warning(
-                    "Status: {} - {} (not posting to webex) - {}".format(
-                        status["state"], type, items["url"]
-                        )
-                    )
-            logging.info("Adaptive Card Data: {}".format(status["data"]))
+            logging.warning("Status: {} - {} (not posting to webex) - {}".format(
+                status["state"],
+                type,
+                items["url"]
+                )
+            )
+            logging.info("Adaptive Card Data: {}".format(
+                status["data"]
+                )
+            )
         else:
-            logging.info("Up-to-date {}".format(type))
+            logging.info("Up-to-date {}".format(
+                type
+                )
+            )
         return
 
 
@@ -133,8 +158,14 @@ if __name__ == "__main__":
 
     ''' Debug is enabled '''
     if args.debug is True:
-        logging.info("DEBUG: {}".format(os.environ))
-        logging.info("DEBUG: {}".format(args))
+        logging.info("DEBUG: {}".format(
+            os.environ
+            )
+        )
+        logging.info("DEBUG: {}".format(
+            args
+            )
+        )
 
     while True:
 
@@ -144,7 +175,9 @@ if __name__ == "__main__":
             if dbInit["success"] is True:
                 args.init = False
                 logging.info(
-                    "SUCCESS: Created DynamoDB - {}".format(args.table)
+                    "SUCCESS: Created DynamoDB - {}".format(
+                        args.table
+                        )
                     )
             else:
                 raise Exception("ERROR: Unknown error")
@@ -161,5 +194,8 @@ if __name__ == "__main__":
             break
 
         ''' Sleep before running script again '''
-        logging.info("Sleep for {} seconds".format(args.delay))
+        logging.info("Sleep for {} seconds".format(
+            args.delay
+            )
+        )
         time.sleep(args.delay)
