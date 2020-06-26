@@ -7,14 +7,34 @@ def get(org):
     headers = {
                 "Content-Type": "application/json"
               }
-    response = requests.request("GET", url, headers=headers)
+    try:
+        response = requests.request("GET", url, headers=headers)
+    except Exception as error:
+        repo["url"] = False
+        repo["error"] = "{} {}".format(
+            "Unavailable", error
+            )
+        return repo
     ''' If API isn't responding continue to next module '''
     if response.status_code != 200:
         repo["url"] = False
-        repo["error"] = "{} {}".format(response.status_code, response.text)
+        repo["error"] = "{} {}".format(
+            response.status_code,
+            response.text
+            )
         return repo
+
     item = response.json()
-    
+
+    ''' Don't display empty/skeleton repos '''
+    if item[0]["size"] == 0:
+        repo["url"] = False
+        repo["error"] = "{} {}".format(
+            response.status_code,
+            "Empty Github Repo Size is 0"
+            )
+        return repo
+
     repo["title"] = item[0]["full_name"]
     repo["url"] = item[0]["html_url"]
     if item[0]["language"] is None:

@@ -4,7 +4,14 @@ from bs4 import BeautifulSoup
 
 def get(link):
     post = {}
-    url = requests.get(link)
+    try:
+        url = requests.get(link)
+    except Exception as error:
+        post["url"] = False
+        post["error"] = "{} {}".format(
+            "Unavailable", error
+            )
+        return post
     ''' If API isn't responding continue to next module '''
     if url.status_code != 200:
         post["url"] = False

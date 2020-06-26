@@ -12,6 +12,8 @@ def card(type, value, args):
         api = WebexTeamsAPI(access_token=settings["WEBEX_TEAMS_ACCESS_TOKEN"])
     except Exception as e:
         raise Exception("ERROR: Problem with API for Cisco Webex Teams - {}".format(e))
+        result["state"] = "error"
+        return result
     ''' Read in Adaptive Card template '''
     with open('card.json') as file:
         data = json.load(file)
@@ -55,6 +57,8 @@ def card(type, value, args):
                                 )
         except Exception as e:
             raise Exception("ERROR: Couldn't post to Cisco Webex Teams - {}".format(e))
+            result["state"] = "error"
+            return result
     else:
         ''' JSON dump Adaptive Card '''
         result["state"] = "dry-run"

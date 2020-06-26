@@ -12,8 +12,8 @@ modules:
     brighttalk:
       - 17628
     # Meetup group name
-    meetup:
-      - cisco-developers-club-stockholm
+    #meetup:
+    #  - cisco-developers-club-stockholm
 
 # Environment Secrets
 # Use docker-compose or Vault for production!
