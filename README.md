@@ -155,6 +155,49 @@ docker-compose -f docker-compose.yaml up
 docker-compose -f docker-compose-build.yaml up
 ```
 
+## Customization
+
+### Cisco Webex Teams Adaptive Card
+
+Warning!
+
+Changing the Cisco Webex Teams Adaptive Card template could cause this script to not work properly.
+
+#### Design
+
+You can design your own Adaptive Cards, to be used with Cisco Webex Teams [here](https://developer.webex.com/buttons-and-cards-designer)  
+_(More details about how adaptive cards works can be found [here](https://docs.microsoft.com/en-us/adaptive-cards/))_
+
+#### Edit the source code
+
+Replace your own designed adaptive card in the ```card.json``` file.  
+Then you need to match all the data objects in the ```cisco/webex.py``` file.  
+
+```
+    ''' Read in Adaptive Card template '''
+    with open('card.json') as file:
+        data = json.load(file)
+
+    ''' Below changes the data on Adaptive Card Template '''
+```
+
+Edit from here
+
+```
+''' Avatar Image URL for Card '''
+data["content"]["body"][0]["columns"][0]["items"][0]["url"] = value["avatar"]
+```
+...   
+Stop editing here
+```
+''' ActionURL for Card '''
+data["content"]["body"][3]["actions"][0]["url"] = value["url"]
+```
+Save the ```cisco/webex.py``` file. 
+
+#### Build with local changes
+[Local image build](#start-service-local-image-build)
+
 ## Authors & Maintainers
 
 Smart people responsible for the creation and maintenance of this project:
